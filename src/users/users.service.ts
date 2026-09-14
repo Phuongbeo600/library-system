@@ -8,12 +8,21 @@ export class UsersService {
     return 'This action adds a new user';
   }
 
-  findAll() {
-    return `This action returns all users`;
+  private users = [
+    { id: 1, name: 'Alice', email: 'alice@gmail.com', role: 'ADMIN' },
+    { id: 2, name: 'Bob', email: 'bob@gmail.com', role: 'INTERN' },
+  ];
+
+  findAll(role?: 'GUEST' | 'LIBRARIAN' | 'ADMIN') {
+    if (role) {
+      return this.users.filter(user => user.role === role)
+    }
+    return this.users;
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} user`;
+    const user = this.users.find(user => user.id === id)
+    return user;
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
