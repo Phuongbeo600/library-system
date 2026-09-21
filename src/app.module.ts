@@ -4,11 +4,11 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { BooksModule } from './books/books.module';
 import { DatabaseModule } from './database/database.module';
-import { DatabaseModule } from './database/database.module';
+
 
 @Module({
   imports: [UsersModule, BooksModule, DatabaseModule],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

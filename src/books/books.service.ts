@@ -1,26 +1,50 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
+import { DatabaseService } from '../database/database.service';
 
 @Injectable()
 export class BooksService {
-  create(createBookDto: CreateBookDto) {
-    return 'This action adds a new book';
+
+  constructor(private readonly db: DatabaseService) { }
+
+  async create(createBookDto: CreateBookDto) {
+    return await this.db.book.create({
+      data: createBookDto,
+    });
   }
 
-  findAll() {
-    return `This action returns all books`;
+  async findAll() {
+    return await this.db.book.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} book`;
+  async findOne(id: number) {
+    const book = await this.db.book.findUnique({
+      where: { id },
+    });
+    if (!book) {
+      throw new NotFoundException(`Không tìm thấy sách với ID #${id}`);
+    }
+    return book;
   }
 
-  update(id: number, updateBookDto: UpdateBookDto) {
-    return `This action updates a #${id} book`;
+  async update(id: number, updateBookDto: UpdateBookDto) {
+    await this.findOne(id);
+
+    return await this.findOne(id);
+
+    return await this.db.book.update({
+      where: { id },
+      data: updateBookDto,
+    });
+
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} book`;
+  async remove(id: number) {
+    await this.findOne(id);
+
+    return await this.db.book.delete({
+      where: { id }
+    });
   }
 }
